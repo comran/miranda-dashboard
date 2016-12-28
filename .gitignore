@@ -1,0 +1,4 @@
+*.pyc
+/bazel-*
+/compile_commands.json
+/sandbox
