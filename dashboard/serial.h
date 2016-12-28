@@ -16,8 +16,9 @@ class Serial {
  public:
   void Init();
   void Write(char const* command);
-  void Read(char const*);
+  void Read(char *&);
   void Close(void);
+  bool WaitForResponse(char const*, int);
 
  private:
   int serial_fd_ = -1;

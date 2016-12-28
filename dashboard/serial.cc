@@ -60,25 +60,38 @@ void Serial::Write(char const* command_parameter) {
 // Read a line from UART.
 // Return a 0 len string in case of problems with UART
 // http://stackoverflow.com/questions/18108932/linux-c-serial-port-reading-writing
-void Serial::Read(char const* buffer) {
+void Serial::Read(char *&buffer) {
   char c;
-  char* b = (char*)buffer;
+  char* b = buffer;
   int rx_length = -1;
   while (1) {
     rx_length = read(serial_fd_, (void*)(&c), 1);
 
     if (rx_length <= 0) {
       // wait for messages
-      sleep(1);
+      usleep(100);
     } else {
-      ::std::cout << c << ::std::endl;
-      if (c == '\n') {
+      if (c == '\r') {
         *b++ = '\0';
         break;
       }
       *b++ = c;
     }
   }
+}
+
+bool Serial::WaitForResponse(char const* expected_response, int max_iterations) {
+  char* response = new char[500];
+
+  for(int i = 0;i < max_iterations;i++){
+    Read(response);
+    ::std::cout << "RESPONSE: " << response << ::std::endl;
+    if(!strcmp(response, expected_response)) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 void Serial::Close(void) { close(serial_fd_); }
