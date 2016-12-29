@@ -12,10 +12,11 @@
 namespace dashboard {
 namespace sensor_reader {
 namespace serial {
+
 class Serial {
  public:
   void Init();
-  void Write(char const* command);
+  void Write(char const*);
   void Read(char *&);
   void Close(void);
   bool WaitForResponse(char const*, int);

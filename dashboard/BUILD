@@ -30,8 +30,9 @@ cc_library(
     'sensor_reader.h',
   ],
   deps = [
-    'sensors_queue',
-    'serial',
+    ':sensors_queue',
+    ':serial',
+    '//aos/linux_code:init',
   ],
 )
 
