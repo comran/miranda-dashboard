@@ -21,6 +21,7 @@ class SensorReader {
   void ProcessData();
   void WriteDataToQueue(char*);
   int ProcessHexData(char const*);
+  void SendPidCode(char const*);
 
   ::dashboard::sensor_reader::serial::Serial serial_;
 };

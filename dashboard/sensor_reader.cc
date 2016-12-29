@@ -3,33 +3,20 @@
 namespace dashboard {
 namespace sensor_reader {
 
+
 SensorReader::SensorReader() {
   Reset();
 
   while (true) {
-    {
-      char* pid = new char[500];
-      strcat(pid, "01");
-      strcat(pid, kPidCodeRpm);
-      serial_.Write(pid);
-    }
-    ProcessData();
+    SendPidCode(kPidCodeRpm);
+    SendPidCode(kPidCodeMph);
+    SendPidCode(kPidCodeCoolantTemp);
 
-    {
-      char* pid = new char[500];
-      strcat(pid, "01");
-      strcat(pid, kPidCodeMph);
-      serial_.Write(pid);
-    }
-    ProcessData();
-
-    {
-      char* pid = new char[500];
-      strcat(pid, "01");
-      strcat(pid, kPidCodeCoolantTemp);
-      serial_.Write(pid);
-    }
-    ProcessData();
+    ::dashboard::sensors_queue.FetchLatest();
+    ::std::cout << "RPM: " << ::dashboard::sensors_queue->rpm
+      << " MPH: " << ::dashboard::sensors_queue->mph
+      << " coolant temp: " << ::dashboard::sensors_queue->coolant_temp
+      << ::std::endl;
   }
 }
 
@@ -127,6 +114,16 @@ int SensorReader::ProcessHexData(char const* response_parameter) {
   }
 
   return (int)strtol(response, NULL, 16);
+}
+
+void SensorReader::SendPidCode(char const* pid_code) {
+  // Prepend the read code to the pid that we want.
+  char* pid = new char[500];
+  strcat(pid, "01");
+  strcat(pid, pid_code);
+  serial_.Write(pid);
+
+  ProcessData();
 }
 
 }  // namespace sensor_reader
