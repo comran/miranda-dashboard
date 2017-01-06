@@ -2,6 +2,7 @@
 #include "dashboard/sensors.q.h"
 
 #include <iostream>
+#include <iomanip>
 #include <stdlib.h>
 
 namespace dashboard {

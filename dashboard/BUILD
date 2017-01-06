@@ -46,3 +46,16 @@ cc_binary(
     'sensor_reader_lib',
   ],
 )
+
+cc_binary(
+  name = 'dashboard',
+  visibility = ['//visibility:public'],
+  srcs = [
+    'dashboard.cc',
+  ],
+  deps = [
+    '//third_party/SDL2:libSDL2',
+    ':sensors_queue',
+    '//aos/linux_code:init',
+  ],
+)

@@ -9,9 +9,10 @@ namespace serial {
 void Serial::Init() {
   serial_fd_ = open(port_name_, O_RDWR | O_NOCTTY | O_NDELAY);
 
-  if (serial_fd_ == -1) {
+  do {
     ::std::cerr << "ERROR: Could not open file descriptor." << ::std::endl;
-  }
+    sleep(1);
+  } while (serial_fd_ == -1);
 
   struct termios serial_options;
   memset(&serial_options, 0, sizeof serial_options);
@@ -78,6 +79,8 @@ void Serial::Read(char *&buffer) {
       *b++ = c;
     }
   }
+
+  ::std::cout << "RESPONSE: " << buffer << ::std::endl;
 }
 
 bool Serial::WaitForResponse(char const* expected_response, int max_iterations) {
